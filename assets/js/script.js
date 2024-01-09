@@ -98,18 +98,54 @@ var createTaskActions = function (taskId) {
   return actionContainerEl;
 };
 
-var taskButtonHandler = function(event) {
-    if (event.target.matches(".delete-btn")) {
-        //get the element's task Id
-        var taskId = event.target.getAttribute("data-task-id");
-        deleteTask(taskId);
-    }
+//function to handle task buttons
+var taskButtonHandler = function (event) {
+  //get target element from event
+  var targetEl = event.target;
+
+  //edit button was clicked
+  if (targetEl.matches(".edit-btn")) {
+    //get the element's taskid
+    var taskId = targetEl.getAttribute("data-task-id");
+    editTask(taskId);
+  }
+  //delete button was clicked
+  if (targetEl.matches(".delete-btn")) {
+    //get the element's task Id
+    var taskId = targetEl.getAttribute("data-task-id");
+    deleteTask(taskId);
+  }
 };
 
-var deleteTask = function(taskId) {
-    var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
-    taskSelected.remove();
-}
+//function to delete task
+var deleteTask = function (taskId) {
+  //get task list element
+  var taskSelected = document.querySelector(
+    ".task-item[data-task-id='" + taskId + "']"
+  );
+  taskSelected.remove();
+};
+
+//function to edit task
+var editTask = function (taskId) {
+  // get task list item element
+  var taskSelected = document.querySelector(
+    ".task-item[data-task-id='" + taskId + "']"
+  );
+
+  // get content from task name and type
+  var taskName = taskSelected.querySelector("h3.task-name").textContent;
+  document.querySelector("input[name='task-name']").value = taskName;
+
+  var taskType = taskSelected.querySelector("span.task-type").textContent;
+  document.querySelector("select[name='task-type']").value = taskType;
+
+  //change the submit button to Save task
+  document.querySelector("#save-task").textContent = "Save Task";
+
+  //assign a taskID 
+  formEl.setAttribute("data-task-id", taskId);
+};
 
 formEl.addEventListener("submit", taskFormHandler);
 pageContentEl.addEventListener("click", taskButtonHandler);
